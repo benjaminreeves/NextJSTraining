@@ -1,6 +1,7 @@
 import React from "react"
 import Title from "../components/Title"
-import { Typography, Grid2 as Grid, Box, Link } from "@mui/material"
+import { Typography, Grid2 as Grid, Box, Link, Divider } from "@mui/material"
+import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // Random Food Api = https://www.themealdb.com/api/json/v1/1/random.php
@@ -18,7 +19,7 @@ const getFood = async () => {
 }
 
 const getData = async (url) => {
-    return fetch(url, { method: "GET", next: { revalidate: 0 } }).then(response => { return response.json() }).catch(e => console.log(`error occurred: ${e.message}`))
+    return fetch(url, { method: "GET", next: { revalidate: 86400} }).then(response => { return response.json() }).catch(e => console.log(`error occurred: ${e.message}`))
 }
 
 const getIngredients = async (foodObj) => {
@@ -28,6 +29,7 @@ const getIngredients = async (foodObj) => {
         if (key.includes('strIngredient') && foodObj[key]) {
             let number = key.match(/(\d+)/);
             ingredients.push({
+                "id": number[0],
                 "ingredient": foodObj[key],
                 "measure": foodObj[`strMeasure${number[0]}`]
             });
@@ -42,10 +44,6 @@ export default async function API() {
     const chuckJoke = await getChuckFoodJoke();
     const randomFoodRecipe = await getFood();
     const ingredients = await getIngredients(randomFoodRecipe);
-
-    console.log(chuckJoke);
-    console.log(randomFoodRecipe);
-    console.log(ingredients)
 
     return (
         <>
@@ -67,9 +65,11 @@ export default async function API() {
                             <Typography variant='h5'>Want the full recipe?</Typography>
                             <Link target="_blank" href={randomFoodRecipe.strSource}>Click Here</Link>
                         </Grid>
-                        <Grid my={2} size={12} textAlign='center'>
+                        <Grid my={2} size={12} textAlign='center' width='100%'>
                             <Typography variant="h5" fontWeight='bold'>Instructions</Typography>
-                            <Typography my={2}>{randomFoodRecipe.strInstructions}</Typography>
+                            <TextareaAutosize style={{ resize: 'none', width: '100%', padding: 10, fontSize: 16, fontFamily: 'inherit', border: 'none' }} my={2}>
+                                {randomFoodRecipe.strInstructions}
+                            </TextareaAutosize>
                         </Grid>
                         <Grid container my={2} textAlign='center' size={12}>
                             <Grid size={6} fontWeight='bold'>
@@ -84,9 +84,10 @@ export default async function API() {
                                 <Grid size={6} my={1}>
                                     {i.ingredient}
                                 </Grid>
-                                <Grid size={6}>
+                                <Grid size={6} my={1}>
                                     {i.measure}
                                 </Grid>
+                                <Divider sx={{ width: '100%' }} />
                             </>
                         )) : <Typography>No recipe found</Typography>}
                     </Grid>

@@ -11,7 +11,7 @@ export default function Header() {
             <Box justifyContent="flex-end" width="100%">
                 <Link className={styles.Link} href="/">Home</Link>
                 <Link className={styles.Link} href="/AboutMe">About Me</Link>
-                <Link className={styles.Link} href="/API">API</Link>
+                <Link className={styles.Link} href="/API">Page of Random</Link>
             </Box>
         </Stack>
         <Divider sx={{ bgcolor: 'grey' }} orientation="horizontal" />

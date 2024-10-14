@@ -1,11 +1,14 @@
 import React from "react"
 import Title from "../components/Title"
 import { Typography, Grid2 as Grid, Box, Link, Divider } from "@mui/material"
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+
+import styles from "./api.module.css";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // Random Food Api = https://www.themealdb.com/api/json/v1/1/random.php
 // Chuck Norries Food Joke = https://api.chucknorris.io/jokes/random?category=food
+// Day timer = 86400
 
 const getChuckFoodJoke = async () => {
     const url = 'https://api.chucknorris.io/jokes/random?category=food'
@@ -19,7 +22,7 @@ const getFood = async () => {
 }
 
 const getData = async (url) => {
-    return fetch(url, { method: "GET", next: { revalidate: 86400} }).then(response => { return response.json() }).catch(e => console.log(`error occurred: ${e.message}`))
+    return fetch(url, { method: "GET", next: { revalidate: 10 } }).then(response => { return response.json() }).catch(e => console.log(`error occurred: ${e.message}`))
 }
 
 const getIngredients = async (foodObj) => {
@@ -48,14 +51,16 @@ export default async function API() {
     return (
         <>
             <Title textAlign='center'>A Page of Random</Title>
-            <Grid container>
+            <Grid container justifyContent='center'>
+                <Divider className={styles.divider} />
                 <Grid my={2} direction='row' textAlign='center' size={12}>
-                    <Typography my={1} variant='h5' fontWeight='bold'>Random Chuck Norris Food Joke</Typography>
+                    <Typography variant='h5' fontWeight='bold'>Random Chuck Norris Food Joke</Typography>
                     <Typography>{chuckJoke ? chuckJoke.value : <Typography>No joke found</Typography>}</Typography>
                 </Grid>
+                <Divider className={styles.divider} />
                 <Grid my={2} textAlign='center' size={12}>
-                    <Title>Random Food Choice for you</Title>
-                    <Box my={2} component='img' src={randomFoodRecipe.strMealThumb} />
+                    <Typography my={1} variant='h5' fontWeight='bold'>Random Food Choice for you</Typography>
+                    <Box component='img' src={randomFoodRecipe.strMealThumb} />
                     <Grid container columns={12}>
                         <Grid spacing={2} size={6}>
                             <Typography variant='h5'>Meal Name</Typography>

@@ -4,6 +4,7 @@ import { Stack, TextField, Button, Alert, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { SubmitForm } from "../actions/SubmitAction";
 
 const contactSchema = yup.object().shape({
     name: yup.string().required("Please enter your name"),
@@ -12,7 +13,6 @@ const contactSchema = yup.object().shape({
 });
 
 export default function ContactForm() {
-
     const { register, handleSubmit, formState: { errors }, reset} = useForm({
         mode: 'onBlur',
         resolver: yupResolver(contactSchema)
@@ -21,23 +21,13 @@ export default function ContactForm() {
     const [formError, setFormError] = useState(false);
 
     function onSubmit(event) {
+        const formSubmitted = SubmitForm(event);
 
-        const url = 'http://localhost:3001/forms';
-
-        fetch(url, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(event)
-        }).then(response => {
-            console.log(`response: ${response.status}`)
-            setFormSent(true)
-        }).catch((e) => {
-            console.log(`Error occurred: ${e.message}`)
-            setFormError(true)
-        })
+        if (formSubmitted) {
+            setFormSent(true);
+        } else {
+            setFormSent(false);
+        }
     }
 
     function handleReset() {

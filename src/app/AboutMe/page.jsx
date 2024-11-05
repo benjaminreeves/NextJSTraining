@@ -1,15 +1,17 @@
-import { Box, Typography, Stack, Divider } from "@mui/material"
-import React from "react"
+import { Box, Typography, Stack, Divider, CircularProgress } from "@mui/material"
+import React, { Suspense } from "react"
 
 import ContactForm from "../components/ContactForm"
 import Title from "../components/Title"
+import aboutMePicture from '../../../public/Profile-Pic-Ben.jpg';
+import Image from "next/image";
 
 
 export default function AboutMe() {
     return (
         <Stack alignItems="center" mt={2}>
             <Title>About Me</Title>
-            <Box my={2} component="img" alt="Picture of me goes here" height={250} src="/static/images/Profile-Pic-Ben.jpg"/>
+            <Image height={250} width={200} alt="Picture of me goes here" src={aboutMePicture}/>
             <Typography variant="h6">Benjamin Reeves</Typography>
             <Divider sx={{ my: 2, width: '80%' }} />
             <Title>Where did I go to school?</Title>
@@ -24,7 +26,9 @@ export default function AboutMe() {
             <Divider sx={{ my: 2, width: '80%' }} />
             <Title>Contact Form</Title>
             <Typography>Wanna Chat? Send me a message!</Typography>
-            <ContactForm />
+            <Suspense fallback={<CircularProgress />}>
+                <ContactForm />
+            </Suspense>
         </Stack>
     )
 }

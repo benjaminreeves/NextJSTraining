@@ -1,5 +1,3 @@
-"use server"
-
 export const SubmitForm = async (formData) => {
         const url = 'http://localhost:3001/forms';
 
